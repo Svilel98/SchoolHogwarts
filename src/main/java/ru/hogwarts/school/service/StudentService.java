@@ -7,9 +7,8 @@ import java.util.*;
 
 @Service
 public class StudentService {
-    private HashMap<Integer, Student> students = new HashMap<>();
+    private final HashMap<Integer, Student> students = new HashMap<>();
     private Integer lastId = 0;
-    private List<Student> listStudents;
 
     public Student findStudent(Integer id) {
         return students.get(id);
@@ -17,7 +16,7 @@ public class StudentService {
 
     public Student createStudent(Student student) {
         student.setId(lastId++);
-        students.put(lastId, student);
+        students.put(student.getId(), student);
         return student;
     }
 
@@ -35,9 +34,9 @@ public class StudentService {
 
     public Collection<Student> filterAge(Integer age) {
         ArrayList<Student> listStudentByAge = new ArrayList<>();
-        for (Student student : listStudentByAge) {
-            if (student.getAge() > age) {
-                listStudents.add(student);
+        for (Student student : students.values()) {
+            if (student.getAge() == age) {
+                listStudentByAge.add(student);
             }
         }
         return listStudentByAge;
