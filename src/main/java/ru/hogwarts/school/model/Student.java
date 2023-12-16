@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 
 import java.util.Objects;
+
 @Entity
 public class Student {
     @Id
@@ -15,7 +16,9 @@ public class Student {
 
     @ManyToOne
     @JoinColumn(name = "faculty_id")
-    @JsonIgnore private Faculty faculty;
+    @JsonIgnore
+    private Faculty faculty;
+
     public Student() {
     }
 

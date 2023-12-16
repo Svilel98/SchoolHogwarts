@@ -21,7 +21,7 @@ public class StudentService {
     }
 
     public Student createStudent(Student student) {
-       return studentRepository.save(student);
+        return studentRepository.save(student);
     }
 
     public Student editStudent(Student student) {
@@ -41,7 +41,8 @@ public class StudentService {
         }
         return listStudentByAge;
     }
-    public Collection<Student> findByAgeBetween(Integer minAge, Integer maxAge){
+
+    public Collection<Student> findByAgeBetween(Integer minAge, Integer maxAge) {
         ArrayList<Student> listStudentByAge = new ArrayList<>();
         for (Student student : studentRepository.findAll()) {
             if (student.getAge() > minAge && student.getAge() < maxAge) {

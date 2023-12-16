@@ -42,6 +42,7 @@ public class FacultyService {
         }
         return listFacultyByColor;
     }
+
     public Collection<Faculty> filterNameFaculty(String name) {
         ArrayList<Faculty> listFacultyByName = new ArrayList<>();
         for (Faculty faculty : facultyRepository.findAll()) {
