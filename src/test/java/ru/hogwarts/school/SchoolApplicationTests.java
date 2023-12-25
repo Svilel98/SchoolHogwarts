@@ -82,10 +82,6 @@ class SchoolApplicationTests {
                 .assertThat(this.restTemplate.postForObject("http://localhost:" + port + "/student", student, String.class))
                 .isNotNull();
     }
-//    @Test
-//    public void getListStudentByAge() throws Exception {
-//        ResponseEntity<Student> responseStudentAgeBetween = restTemplate.getForEntity("/student?age=" + 20 + "&minAge=" + 30 + "&maxAge"+ 40
-//                ,Student.class);
-//    }
+
 
 }

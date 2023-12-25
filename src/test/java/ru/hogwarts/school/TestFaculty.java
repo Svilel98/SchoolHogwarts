@@ -16,6 +16,7 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TestFaculty {
     @LocalServerPort
@@ -92,18 +93,4 @@ public class TestFaculty {
                 .assertThat(this.restTemplate.postForObject("http://localhost:" + port + "/faculty", testFaculty, String.class))
                 .isNotNull();
     }
-
-//    @Test
-//    public void getListStudentByFaculty() {
-//        ResponseEntity<Faculty> response = createFaculty("Кот", "Красный");
-//        Student student = new Student();
-//        Faculty expectedFaculty = response.getBody();
-//        student.setFaculty(expectedFaculty);
-//        ResponseEntity<Student> studentResponseEntity = restTemplate.postForEntity("/student/studentByFaculty/1", student, Student.class);
-//        long studentId = studentResponseEntity.getBody().getId();
-//        response = restTemplate.getForEntity("/faculty/by-student?studentId=" + studentId, Faculty.class);
-//        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-//        Assertions.assertThat(response.getBody()).isNotNull();
-//        Assertions.assertThat(response.getBody()).isEqualTo(expectedFaculty);
-//    }
 }
