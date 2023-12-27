@@ -29,6 +29,7 @@ import ru.hogwarts.school.service.StudentService;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -66,8 +67,8 @@ class SchoolApplicationTests {
         testStudent.setId(id);
         testStudent.setName(name);
         testStudent.setAge(age);
-        when(studentRepository.save(any(Student.class))).thenReturn(testStudent);
-        when(studentRepository.findById(any(Long.class))).thenReturn(Optional.of(testStudent));
+        when(studentService.createStudent(any(Student.class))).thenReturn(testStudent);
+        when(studentService.findStudent(any(Long.class))).thenReturn(testStudent);
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/student")
                         .content(studentObject.toString())
@@ -84,28 +85,89 @@ class SchoolApplicationTests {
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.age").value(age));
+    }
+
+    @Test
+    public void getStudentTest() throws Exception {
+        final String name = "Андрей";
+        final int age = 24;
+        final long id = 1;
+        JSONObject studentObject = new JSONObject();
+        studentObject.put("name", name);
+        studentObject.put("age", age);
+        Student student = new Student();
+        student.setId(id);
+        student.setName(name);
+        student.setAge(age);
+        when(studentService.findStudent(any(Long.class))).thenReturn(student);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/student/" + 1)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getListStudentByFaculty() throws Exception {
+        final String name = "Андрей";
+        final int age = 24;
+        final long id = 1;
+        JSONObject studentObject = new JSONObject();
+        studentObject.put("name", name);
+        studentObject.put("age", age);
+        Student student = new Student();
+        student.setId(id);
+        student.setName(name);
+        student.setAge(age);
+        when(studentService.findStudent(any(Long.class))).thenReturn(student);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/student")
+                        .queryParam("minAge", "10")
+                        .queryParam("maxAge", "30")
+                        .content(objectMapper.writeValueAsString(student))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteStudentTest() throws Exception {
+        final String name = "Андрей";
+        final int age = 24;
+        final long id = 1;
+        JSONObject studentObject = new JSONObject();
+        studentObject.put("name", name);
+        studentObject.put("age", age);
+        Student student = new Student();
+        student.setId(id);
+        student.setName(name);
+        student.setAge(age);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/student/" + 1)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void editStudentTest() throws Exception {
+        final String name = "Андрей";
+        final int age = 24;
+        final long id = 1;
+        JSONObject studentObject = new JSONObject();
+        studentObject.put("name", name);
+        studentObject.put("age", age);
+        Student student = new Student();
+        student.setId(id);
+        student.setName(name);
+        student.setAge(age);
+        when(studentService.editStudent(any(Student.class))).thenReturn(student);
         mockMvc.perform(MockMvcRequestBuilders
                         .put("/student")
-                        .content(objectMapper.writeValueAsString(testStudent))
+                        .content(studentObject.toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.age").value(age));
-        mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/student/" + id)
-                        .content(objectMapper.writeValueAsString(testStudent))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/student/")
-                        .queryParam("min", "10")
-                        .queryParam("max", "30")
-                        .content(objectMapper.writeValueAsString(testStudent))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
     }
 }
