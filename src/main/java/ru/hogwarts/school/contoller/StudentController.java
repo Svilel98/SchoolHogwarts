@@ -32,7 +32,6 @@ public class StudentController {
     @PostMapping
     public Student postStudent(@RequestBody Student student) {
         return studentService.createStudent(student);
-
     }
 
     @PutMapping
