@@ -31,6 +31,9 @@ public class StudentService {
     public void removeStudent(long id) {
         studentRepository.deleteById(id);
     }
+    public void removeAllStudent() {
+        studentRepository.deleteAll();
+    }
 
     public Collection<Student> filterAge(Integer age) {
         ArrayList<Student> listStudentByAge = new ArrayList<>();
@@ -51,4 +54,14 @@ public class StudentService {
         }
         return listStudentByAge;
     }
+    public Integer getQuantityOfAllStudents() {
+        return studentRepository.getQuantityOfAllStudents();
+    }
+    public Integer getAverageAgeByStudent() {
+        return studentRepository.getAverageAgeByStudent();
+    }
+    public List<Student> getLastStudent(){
+        return studentRepository.getLastStudent();
+    }
+
 }
