@@ -76,7 +76,7 @@ public class StudentController {
     }
     @GetMapping("/allStudent")
     public Integer getQuantityOfAllStudents(){
-        return studentService.getQuantityOfAllStudents();
+        return studentService.getAmountOfAllStudents();
     }
     @GetMapping("/averageAgeByStudent")
     public Integer getAverageAgeByStudent(){

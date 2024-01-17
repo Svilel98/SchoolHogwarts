@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query(value = "SELECT COUNT(*) FROM student", nativeQuery = true)
-    Integer getQuantityOfAllStudents();
+    Integer getAmountOfAllStudents();
     @Query(value = "SELECT AVG(s.age) FROM student s", nativeQuery = true)
     Integer getAverageAgeByStudent();
     @Query(value = "SELECT * FROM student ORDER BY id DESC LIMIT 5 ", nativeQuery = true)
