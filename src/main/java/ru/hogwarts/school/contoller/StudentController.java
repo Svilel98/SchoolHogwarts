@@ -49,6 +49,7 @@ public class StudentController {
         studentService.removeStudent(id);
         return ResponseEntity.ok().build();
     }
+
     @DeleteMapping
     public void removeStudent() {
         studentService.removeAllStudent();
@@ -74,17 +75,29 @@ public class StudentController {
         ResponseEntity<Faculty> ok = ResponseEntity.ok(faculty);
         return ok;
     }
+
     @GetMapping("/allStudent")
-    public Integer getQuantityOfAllStudents(){
+    public Integer getQuantityOfAllStudents() {
         return studentService.getAmountOfAllStudents();
     }
+
     @GetMapping("/averageAgeByStudent")
-    public Integer getAverageAgeByStudent(){
+    public Integer getAverageAgeByStudent() {
         return studentService.getAverageAgeByStudent();
     }
+
     @GetMapping("/lastStudent")
-    public List<Student> getLastStudent(){
+    public List<Student> getLastStudent() {
         return studentService.getLastStudent();
+    }
+
+    @GetMapping("/findAllStudentsWithTheLetterA")
+    public List<Student> findAllStudentsWithTheLetterA(){
+        return studentService.findAllStudentWithTheLetterA();
+    }
+    @GetMapping("/findAverageAgeByStudent")
+    public double findAverageAgeByStudent(){
+        return studentService.findAverageAgeByStudent();
     }
 }
 

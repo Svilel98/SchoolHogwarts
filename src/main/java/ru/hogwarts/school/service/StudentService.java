@@ -7,6 +7,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
@@ -36,6 +37,7 @@ public class StudentService {
         logger.info("Was invoked method for remove student {}", id);
         studentRepository.deleteById(id);
     }
+
     public void removeAllStudent() {
         logger.info("Was invoked method for remove student {}");
         studentRepository.deleteAll();
@@ -62,17 +64,37 @@ public class StudentService {
         }
         return listStudentByAge;
     }
+
     public Integer getAmountOfAllStudents() {
         logger.info("Was invoked method for get all student");
         return studentRepository.getAmountOfAllStudents();
     }
+
     public Integer getAverageAgeByStudent() {
         logger.info("Was invoked method for get average age student");
         return studentRepository.getAverageAgeByStudent();
     }
-    public List<Student> getLastStudent(){
+
+    public List<Student> getLastStudent() {
         logger.info("Was invoked method for get last student");
         return studentRepository.getLastStudent();
     }
 
+    public List<Student> findAll() {
+        return studentRepository.findAll();
+    }
+
+    public List<Student> findAllStudentWithTheLetterA() {
+        List<Student> allStudentWithLetterA = findAll().stream()
+                .parallel()
+                .filter(a -> a.getName().toUpperCase().startsWith("A"))
+                .sorted(Comparator.comparing(s -> s.getName()))
+                .collect(Collectors.toList());
+        return allStudentWithLetterA;
+    }
+    public double findAverageAgeByStudent() {
+        return findAll().stream()
+                .mapToInt(a -> a.getAge())
+                .average().orElse(0);
+    }
 }
