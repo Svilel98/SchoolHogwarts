@@ -70,4 +70,12 @@ public class FacultyController {
         }
         return ResponseEntity.ok(Collections.emptyList());
     }
+    @GetMapping("/findAverageAgeByStudent")
+    public String findAverageAgeByStudent(){
+        return facultyService.findFacultyWithTheLongestName();
+    }
+    @GetMapping("/getLongNumber")
+    public int getLongNumber(){
+        return facultyService.getLongNumber();
+    }
 }

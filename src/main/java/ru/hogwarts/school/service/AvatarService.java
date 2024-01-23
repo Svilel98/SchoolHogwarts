@@ -1,7 +1,10 @@
 package ru.hogwarts.school.service;
 
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.model.Avatar;
@@ -14,6 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -25,6 +29,7 @@ public class AvatarService {
     private final StudentService studentService;
 
     private final AvatarRepository avatarRepository;
+    Logger logger = LoggerFactory.getLogger(AvatarService.class);
 
     public AvatarService(StudentService studentService, AvatarRepository avatarRepository) {
         this.studentService = studentService;
@@ -32,6 +37,7 @@ public class AvatarService {
     }
 
     public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
+        logger.info("Was invoked method for create avatar");
         Student student = studentService.findStudent(studentId);
 
         Path filePath = Path.of(avatarsDir, student + "." + getExtension(file.getOriginalFilename()));
@@ -53,28 +59,14 @@ public class AvatarService {
         avatarRepository.save(avatar);
     }
 
-    private String getExtensions(String fileName) {
-        return fileName.substring(fileName.lastIndexOf(".") + 1);
+    public List<Avatar> getAllAvatars(Integer pageNumber, Integer pageSize) {
+        logger.info("Was invoked method for get all avatar");
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+        return avatarRepository.findAll(pageRequest).getContent();
     }
-//    private byte[] generateImagePreview(Path filePath) throws IOException {
-//        try (InputStream is = Files.newInputStream(filePath);
-//             BufferedInputStream bis = new BufferedInputStream(is, 1024);
-//             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-//            BufferedImage image = ImageIO.read(bis);
-//
-//            int height = image.getHeight() / (image.getWidth() / 100);
-//            BufferedImage preview = new BufferedImage(100, height, image.getType());
-//            Graphics2D graphics = preview.createGraphics();
-//            graphics.drawImage(image, 0, 0, 100, height, null);
-//            graphics.dispose();
-//
-//            ImageIO.write(preview, getExtension(filePath.getFileName().toString()), baos);
-//            return baos.toByteArray();
-//        }
-//
-//    }
 
     public Avatar findAvatarStudent(Long studentId) {
+        logger.info("Was invoked method for find avatar by id {}", studentId);
         return avatarRepository.findByStudentId(studentId).orElse(new Avatar());
     }
 

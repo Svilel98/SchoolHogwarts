@@ -9,6 +9,7 @@ import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 
 @RestController
@@ -32,7 +33,6 @@ public class StudentController {
     @PostMapping
     public Student postStudent(@RequestBody Student student) {
         return studentService.createStudent(student);
-
     }
 
     @PutMapping
@@ -48,6 +48,11 @@ public class StudentController {
     public ResponseEntity<Student> removeStudent(@PathVariable Integer id) {
         studentService.removeStudent(id);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping
+    public void removeStudent() {
+        studentService.removeAllStudent();
     }
 
     @GetMapping
@@ -69,6 +74,30 @@ public class StudentController {
         Faculty faculty = student.getFaculty();
         ResponseEntity<Faculty> ok = ResponseEntity.ok(faculty);
         return ok;
+    }
+
+    @GetMapping("/allStudent")
+    public Integer getQuantityOfAllStudents() {
+        return studentService.getAmountOfAllStudents();
+    }
+
+    @GetMapping("/averageAgeByStudent")
+    public Integer getAverageAgeByStudent() {
+        return studentService.getAverageAgeByStudent();
+    }
+
+    @GetMapping("/lastStudent")
+    public List<Student> getLastStudent() {
+        return studentService.getLastStudent();
+    }
+
+    @GetMapping("/findAllStudentsWithTheLetterA")
+    public List<Student> findAllStudentsWithTheLetterA(){
+        return studentService.findAllStudentWithTheLetterA();
+    }
+    @GetMapping("/findAverageAgeByStudent")
+    public double findAverageAgeByStudent(){
+        return studentService.findAverageAgeByStudent();
     }
 }
 
