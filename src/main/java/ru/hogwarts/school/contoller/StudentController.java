@@ -92,12 +92,23 @@ public class StudentController {
     }
 
     @GetMapping("/findAllStudentsWithTheLetterA")
-    public List<Student> findAllStudentsWithTheLetterA(){
+    public List<Student> findAllStudentsWithTheLetterA() {
         return studentService.findAllStudentWithTheLetterA();
     }
+
     @GetMapping("/findAverageAgeByStudent")
-    public double findAverageAgeByStudent(){
+    public double findAverageAgeByStudent() {
         return studentService.findAverageAgeByStudent();
+    }
+
+    @GetMapping("/print-parallel")
+    public void printParallelAllStudent() {
+        studentService.printParallelAllStudent();
+    }
+
+    @GetMapping("/print-synchronized")
+    public void printSynchronized() {
+        studentService.printSynchronized();
     }
 }
 

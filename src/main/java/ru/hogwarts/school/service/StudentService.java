@@ -1,8 +1,10 @@
 package ru.hogwarts.school.service;
 
+import com.sun.tools.javac.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
@@ -13,6 +15,8 @@ import java.util.stream.Collectors;
 public class StudentService {
     private final StudentRepository studentRepository;
     Logger logger = LoggerFactory.getLogger(StudentService.class);
+    Integer count = 1205;
+    public Object flag = new Object();
 
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
@@ -92,9 +96,42 @@ public class StudentService {
                 .collect(Collectors.toList());
         return allStudentWithLetterA;
     }
+
     public double findAverageAgeByStudent() {
         return findAll().stream()
                 .mapToInt(a -> a.getAge())
                 .average().orElse(0);
+    }
+    @Transactional
+    public void printParallelAllStudent() {
+        printStudent(studentRepository.findNameById(1205));
+        printStudent(studentRepository.findNameById(1206));
+        new Thread(() -> {
+
+            printStudent(studentRepository.findNameById(1207));
+            printStudent(studentRepository.findNameById(1208));
+
+        }).start();
+        new Thread(() -> {
+            printStudent(studentRepository.findNameById(1209));
+            printStudent(studentRepository.findNameById(1204));
+        }).start();
+    }
+
+    private void printStudentSynchronized(String name) {
+        synchronized (flag) {
+            System.out.println(name);
+            count++;
+        }
+    }
+    private void printStudent(String name) {
+
+            System.out.println(name);
+            count++;
+    }
+
+    public void printSynchronized() {
+        printStudentSynchronized(studentRepository.findNameById(1205));
+        printStudentSynchronized(studentRepository.findNameById(1206));
     }
 }
