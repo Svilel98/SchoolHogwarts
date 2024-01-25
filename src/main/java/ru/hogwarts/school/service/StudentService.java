@@ -15,8 +15,6 @@ import java.util.stream.Collectors;
 public class StudentService {
     private final StudentRepository studentRepository;
     Logger logger = LoggerFactory.getLogger(StudentService.class);
-    Integer count = 1205;
-    public Object flag = new Object();
 
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
@@ -102,36 +100,57 @@ public class StudentService {
                 .mapToInt(a -> a.getAge())
                 .average().orElse(0);
     }
+
     @Transactional
     public void printParallelAllStudent() {
-        printStudent(studentRepository.findNameById(1205));
-        printStudent(studentRepository.findNameById(1206));
+        List<Student> all = studentRepository.findAll().stream()
+                .sorted(Comparator.comparing(Student::getId))
+                .limit(6)
+                .toList();
+        printStudent(all.get(0));
+        printStudent(all.get(1));
         new Thread(() -> {
 
-            printStudent(studentRepository.findNameById(1207));
-            printStudent(studentRepository.findNameById(1208));
+            printStudent(all.get(2));
+            printStudent(all.get(3));
 
         }).start();
         new Thread(() -> {
-            printStudent(studentRepository.findNameById(1209));
-            printStudent(studentRepository.findNameById(1204));
+            printStudent(all.get(4));
+            printStudent(all.get(5));
         }).start();
     }
 
-    private void printStudentSynchronized(String name) {
-        synchronized (flag) {
-            System.out.println(name);
-            count++;
-        }
-    }
-    private void printStudent(String name) {
-
-            System.out.println(name);
-            count++;
-    }
-
+    @Transactional
     public void printSynchronized() {
-        printStudentSynchronized(studentRepository.findNameById(1205));
-        printStudentSynchronized(studentRepository.findNameById(1206));
+        Queue<Student> all = new LinkedList<>(studentRepository.findAll().stream()
+                .sorted(Comparator.comparing(Student::getId))
+                .limit(6)
+                .toList());
+        printStudentSynchronized(all.poll());
+        printStudentSynchronized(all.poll());
+        new Thread(() -> {
+
+            printStudentSynchronized(all.poll());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            printStudentSynchronized(all.poll());
+
+        }).start();
+        new Thread(() -> {
+            printStudentSynchronized(all.poll());
+            printStudentSynchronized(all.poll());
+        }).start();
+    }
+
+    private synchronized void printStudentSynchronized(Student student) {
+        System.out.println(student);
+    }
+
+    private void printStudent(Student student) {
+        System.out.println(student);
     }
 }

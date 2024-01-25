@@ -88,6 +88,11 @@ public class StudentController {
 
     @GetMapping("/lastStudent")
     public List<Student> getLastStudent() {
+        try {
+            Thread.sleep(30000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return studentService.getLastStudent();
     }
 
