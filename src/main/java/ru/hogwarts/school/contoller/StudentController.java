@@ -88,16 +88,32 @@ public class StudentController {
 
     @GetMapping("/lastStudent")
     public List<Student> getLastStudent() {
+        try {
+            Thread.sleep(30000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return studentService.getLastStudent();
     }
 
     @GetMapping("/findAllStudentsWithTheLetterA")
-    public List<Student> findAllStudentsWithTheLetterA(){
+    public List<Student> findAllStudentsWithTheLetterA() {
         return studentService.findAllStudentWithTheLetterA();
     }
+
     @GetMapping("/findAverageAgeByStudent")
-    public double findAverageAgeByStudent(){
+    public double findAverageAgeByStudent() {
         return studentService.findAverageAgeByStudent();
+    }
+
+    @GetMapping("/print-parallel")
+    public void printParallelAllStudent() {
+        studentService.printParallelAllStudent();
+    }
+
+    @GetMapping("/print-synchronized")
+    public void printSynchronized() {
+        studentService.printSynchronized();
     }
 }
 

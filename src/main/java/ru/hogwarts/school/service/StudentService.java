@@ -1,8 +1,10 @@
 package ru.hogwarts.school.service;
 
+import com.sun.tools.javac.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
@@ -92,9 +94,63 @@ public class StudentService {
                 .collect(Collectors.toList());
         return allStudentWithLetterA;
     }
+
     public double findAverageAgeByStudent() {
         return findAll().stream()
                 .mapToInt(a -> a.getAge())
                 .average().orElse(0);
+    }
+
+    @Transactional
+    public void printParallelAllStudent() {
+        List<Student> all = studentRepository.findAll().stream()
+                .sorted(Comparator.comparing(Student::getId))
+                .limit(6)
+                .toList();
+        printStudent(all.get(0));
+        printStudent(all.get(1));
+        new Thread(() -> {
+
+            printStudent(all.get(2));
+            printStudent(all.get(3));
+
+        }).start();
+        new Thread(() -> {
+            printStudent(all.get(4));
+            printStudent(all.get(5));
+        }).start();
+    }
+
+    @Transactional
+    public void printSynchronized() {
+        Queue<Student> all = new LinkedList<>(studentRepository.findAll().stream()
+                .sorted(Comparator.comparing(Student::getId))
+                .limit(6)
+                .toList());
+        printStudentSynchronized(all.poll());
+        printStudentSynchronized(all.poll());
+        new Thread(() -> {
+
+            printStudentSynchronized(all.poll());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            printStudentSynchronized(all.poll());
+
+        }).start();
+        new Thread(() -> {
+            printStudentSynchronized(all.poll());
+            printStudentSynchronized(all.poll());
+        }).start();
+    }
+
+    private synchronized void printStudentSynchronized(Student student) {
+        System.out.println(student);
+    }
+
+    private void printStudent(Student student) {
+        System.out.println(student);
     }
 }
